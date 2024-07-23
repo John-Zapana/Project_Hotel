@@ -1,0 +1,34 @@
+git clone https://github.com/John-Zapana/Project_Hotel.git   --Replace John-Zapana by your GitHub account name.
+
+Project_Hotel  -- This is the project name, it will be required
+
+ghp_upKsSBC9qyhoNgFxroqH5GuUQKeL8y48G  -- This is my password to acces Project in GitHub. You must create your password.
+     -- Generating a Personal Access Token (PAT)
+        Log in to GitHub:
+
+        Open GitHub in your browser and log in to your account.
+        Navigate to Developer Settings:
+
+        In the upper right corner of any page, click your profile photo, then click Settings.
+        In the left sidebar, click Developer settings.
+        Create a New Token:
+
+        In the left sidebar, click Personal access tokens.
+        Click Generate new token.
+        Give your token a descriptive name (e.g., "Cloud9 Access Token").
+        Select the scopes or permissions you’d like to grant this token. At a minimum, you’ll need repo access.
+        Generate and Copy the Token:
+
+        Click Generate token.
+        Copy the token to your clipboard. This is your new password for Git operations.
+        
+Now you will see a folder created in AWS CLoud9: "Project Hotel"
+
+From now on, if you want to add files, just drag inside Project_Hotel. And then you follow the following instructions:
+cd Project_Hotel
+git add .
+git commit -m "Comments that you want to add"
+$ git push origin main
+
+
+
