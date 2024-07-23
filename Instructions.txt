@@ -26,9 +26,11 @@ Now you will see a folder created in AWS CLoud9: "Project Hotel"
 
 From now on, if you want to add files, just drag inside Project_Hotel. And then you follow the following instructions:
 cd Project_Hotel
+git pull origin main   -- This allow update changes for all users.
 git add .
 git commit -m "Comments that you want to add"
-$ git push origin main
+git push origin main
+
 
 
 
