@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Room Service - Starlight Hotel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Starlight Hotel Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/booking">Room Booking</a></li>
+                <li><a href="/checkin_checkout">Check-In/Check-Out</a></li>
+                <li><a href="/room_service">Room Service</a></li>
+                <li><a href="/fees_rules">Fees & Rules</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <h2>Request Room Service</h2>
+        <p>Use the form below to request room service. Our team will address your request promptly.</p>
+        
+        <form method="post" action="/room_service">
+            <div class="form-group">
+                <label for="room_number">Room Number:</label>
+                <input type="text" id="room_number" name="room_number" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="service_type">Type of Service:</label>
+                <select id="service_type" name="service_type" required>
+                    <option value="food">Food</option>
+                    <option value="beverage">Beverage</option>
+                    <option value="cleaning">Cleaning</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+            </div>
+            
+            <input type="submit" value="Request Service">
+        </form>
+    </div>
+</body>
+</html>

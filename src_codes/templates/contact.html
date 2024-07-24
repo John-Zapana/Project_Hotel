@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Us - Starlight Hotel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Starlight Hotel Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/booking">Booking</a></li>
+                <li><a href="/checkin_checkout">Check-In/Check-Out</a></li>
+                <li><a href="/room_service">Room Service</a></li>
+                <li><a href="/fees_rules">Fees & Rules</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Contact Us</h1>
+        <p>If you have any questions or need assistance, please use the form below to get in touch with us.</p>
+
+        <form method="post" action="/contact">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+
+            <input type="submit" value="Send Message">
+        </form>
+    </div>
+</body>
+</html>

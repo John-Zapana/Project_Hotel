@@ -31,6 +31,15 @@ git add .
 git commit -m "Comments that you want to add"
 git push origin main
 
+----------------
+cd Project_Hotel
+pip install mysql-connector-python pymongo flask
+pip freeze > requirements.txt   -- Save dependecies. This is optional
+
+Step 2: Set Up Database and Collections
+mysql -u user1 -p
+
+
 
 
 

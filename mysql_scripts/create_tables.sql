@@ -1,3 +1,5 @@
+-- sudo mysql -u root -p < ./Project_Hotel/mysql_scripts/create_tables.sql
+
 -- mysql -u user1 -p
 
 DROP DATABASE IF EXISTS starlight_hotel_db;

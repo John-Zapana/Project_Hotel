@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Room Booking - Starlight Hotel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Starlight Hotel Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/booking">Booking</a></li>
+                <li><a href="/checkin_checkout">Check-In/Check-Out</a></li>
+                <li><a href="/room_service">Room Service</a></li>
+                <li><a href="/fees_rules">Fees & Rules</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Room Booking</h1>
+        <form method="post" action="/booking">
+            <div class="form-group">
+                <label for="user_id">User ID:</label>
+                <input type="text" id="user_id" name="user_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="room_id">Room ID:</label>
+                <input type="text" id="room_id" name="room_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="check_in">Check-In Date:</label>
+                <input type="date" id="check_in" name="check_in" required>
+            </div>
+
+            <div class="form-group">
+                <label for="check_out">Check-Out Date:</label>
+                <input type="date" id="check_out" name="check_out" required>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" name="status" required>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="pending">Pending</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Submit Booking">
+        </form>
+    </div>
+</body>
+</html>

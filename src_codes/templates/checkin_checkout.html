@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check-In/Check-Out - Starlight Hotel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Starlight Hotel Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/booking">Booking</a></li>
+                <li><a href="/checkin_checkout">Check-In/Check-Out</a></li>
+                <li><a href="/room_service">Room Service</a></li>
+                <li><a href="/fees_rules">Fees & Rules</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Check-In/Check-Out</h1>
+        <form method="post" action="/checkin_checkout">
+            <div class="form-group">
+                <label for="user_id">User ID:</label>
+                <input type="text" id="user_id" name="user_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="room_id">Room ID:</label>
+                <input type="text" id="room_id" name="room_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="action">Action:</label>
+                <select id="action" name="action" required>
+                    <option value="check_in">Check-In</option>
+                    <option value="check_out">Check-Out</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>
