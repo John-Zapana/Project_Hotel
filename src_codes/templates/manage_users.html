@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users - Starlight Hotel{% endblock %}
+
+{% block content %}
+    <h1>Manage Users</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.user_id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.role }}</td>
+                <td>
+                    <!-- Add buttons or links to edit/delete users -->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

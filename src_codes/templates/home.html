@@ -1,29 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Home - Starlight Hotel</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Starlight Hotel Management System</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/booking">Room Booking</a></li>
-                <li><a href="/checkin_checkout">Check-In/Check-Out</a></li>
-                <li><a href="/room_service">Room Service</a></li>
-                <li><a href="/fees_rules">Fees & Rules</a></li>
-                <li><a href="/contact">Contact Us</a></li>
-            </ul>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <div class="container">
-        <h2>Welcome to Starlight Hotel!</h2>
-        <p>Use the menu above to navigate through our management system and access various services.</p>
-        <p>We aim to provide a seamless experience for managing hotel operations and guest services.</p>
-    </div>
-</body>
-</html>
+{% block title %}Home - Starlight Hotel{% endblock %}
+
+{% block content %}
+    <h2>Welcome to Starlight Hotel!</h2>
+    <p>Use the menu above to navigate through our management system and access various services.</p>
+    <p>We aim to provide a seamless experience for managing hotel operations and guest services.</p>
+{% endblock %}

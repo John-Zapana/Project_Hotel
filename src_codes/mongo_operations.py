@@ -12,19 +12,25 @@ def create_mongo_connection():
     print("Successfully connected to MongoDB database")
     return db
     
-def create_booking(db, booking_id, user_id, room_id, check_in, check_out, status):
+def create_booking(db, booking_id, user_id, room_id, check_in, check_out, status=None, room_type=None):
     """Create a new booking in the Bookings collection."""
-    bookings = db['Bookings']
-    booking = {
-        "_id": booking_id,
-        "user_id": user_id,
-        "room_id": room_id,
-        "check_in": check_in,
-        "check_out": check_out,
-        "status": status
-    }
-    bookings.insert_one(booking)
-    print("Booking created successfully")
+    try:
+        bookings = db['Bookings']
+        booking = {
+            "_id": booking_id,
+            "user_id": user_id,
+            "room_id": room_id,
+            "check_in": check_in,
+            "check_out": check_out
+        }
+        if status is not None:
+            booking["status"] = status
+        if room_type is not None:
+            booking["room_type"] = room_type
+        bookings.insert_one(booking)
+        print("Booking created successfully")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 def get_bookings(db):
     """Retrieve all bookings from the Bookings collection."""

@@ -1,31 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>About Us - Starlight Hotel</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Starlight Hotel Management System</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/booking">Booking</a></li>
-                <li><a href="/checkin_checkout">Check-In/Check-Out</a></li>
-                <li><a href="/room_service">Room Service</a></li>
-                <li><a href="/fees_rules">Fees & Rules</a></li>
-                <li><a href="/contact">Contact Us</a></li>
-            </ul>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <div class="container">
-        <h1>About Us</h1>
-        <p>Welcome to the Starlight Hotel Management System!</p>
-        <p>At Starlight Hotel, we offer a luxurious and unforgettable experience for every guest. We take pride in providing top-notch service and a comfortable stay to ensure your visit is enjoyable.</p>
-        <p>Our dedicated team is here to assist you with any needs or questions you might have during your stay. Feel free to reach out to us for any assistance or information you may require.</p>
-        <p>Thank you for choosing Starlight Hotel. We look forward to providing you with an exceptional experience!</p>
+{% block title %}About Us - Starlight Hotel{% endblock %}
+
+{% block content %}
+    <h1>About Us</h1>
+    <p>Welcome to the Starlight Hotel Management System!</p>
+    <p>At Starlight Hotel, we pride ourselves on delivering exceptional service and creating unforgettable experiences for our guests. Our dedicated team of experts is committed to maintaining the highest standards of hospitality and ensuring your stay is as enjoyable as possible. Meet the key members of our team:</p>
+
+    <div class="team-member">
+        <h2>Optimus Prime - Owner</h2>
+        <p>As the visionary leader of Starlight Hotel, Optimus Prime ensures the highest standards of hospitality and guest satisfaction. His strategic guidance and commitment to excellence drive our mission to provide an unparalleled hotel experience.</p>
     </div>
-</body>
-</html>
+
+    <div class="team-member">
+        <h2>Bumblebee - General Manager</h2>
+        <p>Bumblebee oversees the daily operations of the hotel, ensuring that everything runs smoothly and guests have a seamless experience. His attention to detail and dedication to service excellence play a crucial role in our hotel's success.</p>
+    </div>
+
+    <div class="team-member">
+        <h2>Ratchet - Head of Maintenance</h2>
+        <p>Ratchet is responsible for maintaining our state-of-the-art facilities and ensuring that everything operates flawlessly. His expertise in facility management guarantees that our guests enjoy a comfortable and well-maintained environment.</p>
+    </div>
+
+    <div class="team-member">
+        <h2>Arcee - Head of Guest Relations</h2>
+        <p>Arcee is dedicated to ensuring that every guest has a memorable and enjoyable stay. Her focus on guest satisfaction and personalized service helps to create a welcoming and friendly atmosphere at Starlight Hotel.</p>
+    </div>
+
+    <p>Thank you for choosing Starlight Hotel. We look forward to providing you with an exceptional experience and are here to assist you with any needs or questions you might have during your stay.</p>
+{% endblock %}

@@ -3,43 +3,90 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #e9ecef; /* Light gray background */
+    box-sizing: border-box; /* Ensure padding is included in the element’s total width and height */
+}
+
+/* Ensure the body has padding to keep content away from the edges */
+body {
+    padding: 0 40px; /* Increase padding to 40px on the left and right */
+}
+
+/* Ensure that any containers within the body have sufficient padding */
+.container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px; /* Add padding inside the containers */
+    margin: 20px auto;
+    max-width: 800px; /* Limit the maximum width of the containers */
 }
 
 header {
     background-color: #333;
     color: #fff;
-    padding: 10px 0;
-    text-align: center;
+    padding: 20px 0; /* Padding for a taller header */
+    width: 100vw; /* Ensure header spans full viewport width */
+    position: relative; /* To contain absolutely positioned elements within it */
+    left: 50%; /* Offset to center the content */
+    margin-left: -50vw; /* Adjust left margin to counteract the offset */
+    box-sizing: border-box; /* Include padding in the width calculation */
 }
 
-nav ul {
+.top-bar {
+    display: flex;
+    flex-direction: column; /* Stack auth-buttons and nav-tabs vertically */
+    align-items: center;
+    width: 100%;
+}
+
+.auth-buttons {
+    margin-bottom: 30px; /* Space between buttons and tabs */
+    align-self: flex-end; /* Align buttons to the right */
+    padding: 0 20px; /* Padding to prevent buttons from hitting the edges */
+    box-sizing: border-box;
+}
+
+/* Ensure buttons are smaller and adjust spacing */
+.auth-buttons .btn {
+    color: #fff;
+    background-color: #007bff;
+    text-decoration: none;
+    padding: 8px 12px; /* Reduced padding */
+    border-radius: 5px;
+    margin: 0 5px;
+    font-size: 14px; /* Adjust font size if needed */
+}
+
+.auth-buttons .btn:hover {
+    background-color: #0056b3;
+}
+
+nav {
+    width: 100%;
+}
+
+.nav-tabs {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    justify-content: center; /* Center the tabs */
 }
 
-nav ul li {
-    display: inline-block;
+.nav-tabs li {
     margin: 0 10px;
 }
 
-nav ul li a {
+.nav-tabs li a {
     color: #fff;
     text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 4px;
 }
 
-h1, h2 {
-    color: #333;
-}
-
-.container {
-    width: 80%;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.nav-tabs li a:hover {
+    background-color: #555; /* Slightly lighter background on hover */
 }
 
 /* Form Styles */
@@ -62,9 +109,11 @@ form {
 .form-group select,
 .form-group textarea {
     width: 100%;
+    max-width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .form-group textarea {

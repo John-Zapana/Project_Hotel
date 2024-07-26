@@ -18,7 +18,7 @@ def create_user(username, password_hash, role):
 def get_users():
     """Retrieve all users from the Users table."""
     connection = create_connection()
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)  # Ensure results are dictionaries
     query = "SELECT * FROM Users"
     cursor.execute(query)
     result = cursor.fetchall()
@@ -47,7 +47,7 @@ def delete_user(user_id):
     cursor.close()
     connection.close()
     print("User deleted successfully")
-    
+
 # Example usage (for testing)
 if __name__ == "__main__":
     # Test the functions

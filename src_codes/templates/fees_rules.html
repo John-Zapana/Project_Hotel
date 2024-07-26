@@ -1,52 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Fees and Rules</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Starlight Hotel Management System</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About Us</a></li>
-                <li><a href="/booking">Booking</a></li>
-                <li><a href="/checkin_checkout">Check-In/Check-Out</a></li>
-                <li><a href="/room_service">Room Service</a></li>
-                <li><a href="/fees_rules">Fees and Rules</a></li>
-                <li><a href="/contact">Contact Us</a></li>
-            </ul>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <div class="container">
-        <h1>Fees and Rules</h1>
+{% block title %}Fees and Rules - Starlight Hotel{% endblock %}
 
-        <div class="section" id="fees">
-            <h2>Fees</h2>
-            <p>Our hotel offers various fee structures depending on the type of room and the duration of stay. Below are the details:</p>
-            <ul>
-                <li><strong>Standard Room:</strong> $100 per night</li>
-                <li><strong>Deluxe Room:</strong> $150 per night</li>
-                <li><strong>Suite:</strong> $250 per night</li>
-                <li><strong>Additional Person:</strong> $30 per night</li>
-            </ul>
-            <p>All fees are subject to tax and service charges. For more details on special rates and packages, please contact our reception.</p>
-        </div>
+{% block content %}
+    <h1>Fees and Rules</h1>
 
-        <div class="section" id="rules">
-            <h2>Rules</h2>
-            <p>To ensure a pleasant stay for all guests, please adhere to the following rules:</p>
-            <ul>
-                <li>Check-in time is 3:00 PM and check-out time is 12:00 PM.</li>
-                <li>Smoking is not allowed inside the rooms. Designated smoking areas are provided.</li>
-                <li>Pets are not allowed on the premises, with the exception of service animals.</li>
-                <li>Any damage to hotel property will be charged to the guest's account.</li>
-                <li>Quiet hours are observed from 10:00 PM to 7:00 AM. Please be considerate of other guests.</li>
-            </ul>
-            <p>We appreciate your cooperation and hope you enjoy your stay with us!</p>
-        </div>
+    <div class="section" id="fees">
+        <h2>Fees</h2>
+        <p>Our hotel offers various fee structures depending on the type of room and the duration of stay. Below are the details:</p>
+        <ul>
+            <li><strong>Standard Room:</strong> $100 per night</li>
+            <li><strong>Deluxe Room:</strong> $150 per night</li>
+            <li><strong>Suite:</strong> $250 per night</li>
+            <li><strong>Additional Person:</strong> $30 per night</li>
+        </ul>
+        <p>All fees are subject to tax and service charges. For more details on special rates and packages, please contact our reception.</p>
     </div>
-</body>
-</html>
+
+    <div class="section" id="rules">
+        <h2>Rules</h2>
+        <p>To ensure a pleasant stay for all guests, please adhere to the following rules:</p>
+        <ul>
+            <li>Check-in time is 3:00 PM and check-out time is 12:00 PM.</li>
+            <li>Smoking is not allowed inside the rooms. Designated smoking areas are provided.</li>
+            <li>Pets are not allowed on the premises, with the exception of service animals.</li>
+            <li>Any damage to hotel property will be charged to the guest's account.</li>
+            <li>Quiet hours are observed from 10:00 PM to 7:00 AM. Please be considerate of other guests.</li>
+        </ul>
+        <p>We appreciate your cooperation and hope you enjoy your stay with us!</p>
+    </div>
+{% endblock %}
