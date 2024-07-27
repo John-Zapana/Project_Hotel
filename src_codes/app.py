@@ -10,6 +10,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from flask_bcrypt import Bcrypt
 from mysql_operations import create_user, get_users, update_user, delete_user
 from mongo_operations import create_booking, get_bookings, update_booking, delete_booking, create_mongo_connection
+import uuid
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with your actual secret key
@@ -42,8 +43,8 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get('username')
+        password = request.form.get('password')
         users = get_users()
         for user in users:
             if user['username'] == username and bcrypt.check_password_hash(user['password_hash'], password):
@@ -56,9 +57,9 @@ def login():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        role = request.form['role']  # Retrieve the role from the form
+        username = request.form.get('username')
+        password = request.form.get('password')
+        role = request.form.get('role')  # Retrieve the role from the form
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
         create_user(username, password_hash, role)
         flash('Account created successfully! Please log in.')
@@ -78,19 +79,71 @@ def about():
 @app.route('/booking', methods=['GET', 'POST'])
 @login_required
 def booking():
+    available_rooms = []
+    room_type = None
+    check_in_date = None
+    check_out_date = None
+
     if request.method == 'POST':
-        data = request.form
-        if current_user.role == 'Customer':
-            # Handle booking without status
-            create_booking(db, data['booking_id'], data['user_id'], data['room_id'], data['check_in'], data['check_out'])
-        else:
-            # Handle booking with status
-            status = data.get('status')  # Use .get() to avoid KeyError
-            create_booking(db, data['booking_id'], data['user_id'], data['room_id'], data['check_in'], data['check_out'], status)
-        
-        flash("Booking created successfully")
+        room_type = request.form.get('room_type')
+        check_in_date = request.form.get('check_in')
+        check_out_date = request.form.get('check_out')
+
+        # Debug print statements
+        print(f"Booking form data - room_type: {room_type}, check_in: {check_in_date}, check_out: {check_out_date}")
+
+        if not all([room_type, check_in_date, check_out_date]):
+            flash('Please fill out all required fields.')
+            return redirect(url_for('booking'))
+
+        available_rooms = check_room_availability(room_type, check_in_date, check_out_date)
+        return render_template('booking.html', available_rooms=available_rooms, room_type=room_type, check_in_date=check_in_date, check_out_date=check_out_date)
+
+    return render_template('booking.html', available_rooms=available_rooms, room_type=room_type, check_in_date=check_in_date, check_out_date=check_out_date)
+
+@app.route('/select_room', methods=['POST'])
+@login_required
+def select_room():
+    room_id = request.form.get('room_id')
+    check_in_date = request.form.get('check_in_date')
+    check_out_date = request.form.get('check_out_date')
+    room_type = request.form.get('room_type')
+    status = request.form.get('status', 'Pending')
+
+    # Debug print statements
+    print(f"Room selection data - room_id: {room_id}, check_in: {check_in_date}, check_out: {check_out_date}, room_type: {room_type}, status: {status}")
+
+    if not all([room_id, check_in_date, check_out_date, room_type]):
+        flash('Please provide all required fields.')
         return redirect(url_for('booking'))
-    return render_template('booking.html')
+
+    create_booking(db, current_user.id, room_id, check_in_date, check_out_date, status, room_type)
+    flash(f'Room {room_id} has been booked successfully for check-in on {check_in_date} and check-out on {check_out_date}.')
+    return redirect(url_for('booking'))
+
+def check_room_availability(room_type, check_in_date, check_out_date):
+    bookings = get_bookings(db)
+    unavailable_rooms = set()
+
+    # Define room numbers based on room type
+    room_types = {
+        'single': ["101", "102", "103", "104"],
+        'double': ["201", "202", "203", "204"],
+        'suite': ["301", "302", "303", "304"]
+    }
+    
+    all_rooms = room_types.get(room_type, [])
+
+    # Filter out rooms that are not available for the given date range
+    for booking in bookings:
+        if 'room_type' in booking and booking['room_type'] == room_type:
+            if not (booking['check_out'] < check_in_date or booking['check_in'] > check_out_date):
+                unavailable_rooms.add(booking['room_id'])
+
+    # Get rooms that are not in the unavailable list
+    available_rooms = [room for room in all_rooms if room not in unavailable_rooms]
+
+    return available_rooms
 
 @app.route('/checkin_checkout', methods=['GET', 'POST'])
 @login_required
@@ -100,7 +153,8 @@ def checkin_checkout():
         return redirect(url_for('home'))
     if request.method == 'POST':
         # Implement check-in/check-out logic here
-        return jsonify({"message": "Check-In/Check-Out processed successfully"}), 201
+        flash("Check-In/Check-Out processed successfully")
+        return redirect(url_for('checkin_checkout'))
     return render_template('checkin_checkout.html')
 
 @app.route('/room_service', methods=['GET', 'POST'])
@@ -111,7 +165,8 @@ def room_service():
         return redirect(url_for('home'))
     if request.method == 'POST':
         # Implement room service logic here
-        return jsonify({"message": "Room Service request processed successfully"}), 201
+        flash("Room Service request processed successfully")
+        return redirect(url_for('room_service'))
     return render_template('room_service.html')
 
 @app.route('/fees_rules')
@@ -121,10 +176,10 @@ def fees_rules():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        subject = request.form['subject']
-        message = request.form['message']
+        name = request.form.get('name')
+        email = request.form.get('email')
+        subject = request.form.get('subject')
+        message = request.form.get('message')
         # Add logic to process the contact form data
         flash('Your message has been sent successfully!')
         return redirect(url_for('contact'))

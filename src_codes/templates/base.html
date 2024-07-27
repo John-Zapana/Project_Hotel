@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>{% block title %}Starlight Hotel{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -9,10 +11,10 @@
         <div class="top-bar">
             <div class="auth-buttons">
                 {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+                    <a href="{{ url_for('logout') }}">Logout</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="btn">Log In</a>
-                    <a href="{{ url_for('signup') }}" class="btn">Sign Up</a>
+                    <a href="{{ url_for('login') }}">Log In</a>
+                    <a href="{{ url_for('signup') }}">Sign Up</a>
                 {% endif %}
             </div>
             <nav>
@@ -22,15 +24,14 @@
                     <li><a href="{{ url_for('booking') }}">Room Booking</a></li>
                     <li><a href="{{ url_for('checkin_checkout') }}">Check-In/Check-Out</a></li>
                     <li><a href="{{ url_for('room_service') }}">Room Service</a></li>
-                    <li><a href="{{ url_for('fees_rules') }}">Fees and Rules</a></li>
-                    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+                    <li><a href="{{ url_for('fees_rules') }}">Fees & Rules</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

@@ -3,57 +3,93 @@
 # python3 mongo_operations.py
 
 from pymongo import MongoClient
+import uuid
+from datetime import datetime
 
 def create_mongo_connection():
-    """ Create a MongoDB connection """
+    """Create a MongoDB connection."""
     connection_string = "mongodb+srv://carlossibaja24:DouglasDB2@clusterproject.nj7kypt.mongodb.net/"
     client = MongoClient(connection_string)
     db = client['starlight_hotel_db']
     print("Successfully connected to MongoDB database")
     return db
-    
-def create_booking(db, booking_id, user_id, room_id, check_in, check_out, status=None, room_type=None):
-    """Create a new booking in the Bookings collection."""
+
+def validate_date(date_str):
+    """Validate date format."""
     try:
-        bookings = db['Bookings']
-        booking = {
-            "_id": booking_id,
-            "user_id": user_id,
-            "room_id": room_id,
-            "check_in": check_in,
-            "check_out": check_out
-        }
-        if status is not None:
-            booking["status"] = status
-        if room_type is not None:
-            booking["room_type"] = room_type
-        bookings.insert_one(booking)
-        print("Booking created successfully")
+        datetime.strptime(date_str, '%Y-%m-%d')
+        return True
+    except ValueError:
+        return False
+
+def create_booking(db, user_id, room_id, check_in, check_out, status='Pending', room_type=None):
+    """Create a new booking in MongoDB with validation."""
+    bookings_collection = db['Bookings']
+    
+    # Debug prints
+    print(f"Creating booking with user_id={user_id}, room_id={room_id}, check_in={check_in}, check_out={check_out}, status={status}, room_type={room_type}")
+    
+    # Validate dates
+    if not (validate_date(check_in) and validate_date(check_out)):
+        print("Invalid date format. Use YYYY-MM-DD.")
+        return
+
+    # Validate status
+    valid_statuses = ['Pending', 'Confirmed', 'Cancelled']
+    if status not in valid_statuses:
+        print("Invalid status. Must be one of ['Pending', 'Confirmed', 'Cancelled'].")
+        return
+
+    if room_type is None:
+        print("Room type must be provided.")
+        return
+
+    booking_id = str(uuid.uuid4())  # Generate a unique booking ID
+    booking_document = {
+        "booking_id": booking_id,
+        "user_id": user_id,
+        "room_id": room_id,
+        "check_in": check_in,
+        "check_out": check_out,
+        "status": status,
+        "room_type": room_type  # Ensure room_type is always included
+    }
+    
+    try:
+        result = bookings_collection.insert_one(booking_document)
+        if result.acknowledged:
+            print(f"Booking {booking_id} created successfully with details: {booking_document}")
+        else:
+            print("Booking insertion was not acknowledged.")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Failed to create booking: {e}")
 
 def get_bookings(db):
-    """Retrieve all bookings from the Bookings collection."""
-    bookings = db['Bookings']
-    return list(bookings.find())
+    """Get all bookings from MongoDB."""
+    bookings_collection = db['Bookings']
+    return list(bookings_collection.find())
 
-def update_booking(db, booking_id, update_fields):
-    """Update booking information in the Bookings collection."""
-    bookings = db['Bookings']
-    bookings.update_one({"_id": booking_id}, {"$set": update_fields})
-    print("Booking updated successfully")
+def update_booking(db, booking_id, updated_fields):
+    """Update an existing booking in MongoDB."""
+    bookings_collection = db['Bookings']
+    result = bookings_collection.update_one({"booking_id": booking_id}, {"$set": updated_fields})
+    if result.modified_count == 0:
+        print(f"No booking found with booking_id={booking_id} to update.")
+    else:
+        print(f"Booking {booking_id} updated successfully.")
 
 def delete_booking(db, booking_id):
-    """Delete a booking from the Bookings collection."""
-    bookings = db['Bookings']
-    bookings.delete_one({"_id": booking_id})
-    print("Booking deleted successfully")
-    
-    
-if __name__ == "__main__":
-    db = create_mongo_connection()
-    
-    # Test CRUD operations
-    create_booking(db, "booking123", "user1", "room101", "2024-07-25", "2024-07-30", "confirmed")
-    bookings = get_bookings(db)
-    print("Bookings in database:", bookings)
+    """Delete a booking from MongoDB."""
+    bookings_collection = db['Bookings']
+    result = bookings_collection.delete_one({"booking_id": booking_id})
+    if result.deleted_count == 0:
+        print(f"No booking found with booking_id={booking_id} to delete.")
+    else:
+        print(f"Booking {booking_id} deleted successfully.")
+
+#if __name__ == "__main__":
+#    db = create_mongo_connection()
+    # Test CRUD operations with validation
+#    create_booking(db, None, "user2", "room102", "2024-07-29", "2024-07-31", "Pending", "suite")  # Valid booking
+#    bookings = get_bookings(db)
+#    print("Bookings in database:", bookings)
