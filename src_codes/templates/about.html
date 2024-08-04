@@ -1,31 +1,251 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Starlight Hotel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Calibri', sans-serif;
+        }
+        header{
+            padding:0;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .navbar-nav .nav-item {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        .navbar-nav .nav-link {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #007bff;
+        }
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .navbar-brand:hover {
+            color: #007bff;
+        }
+        .banner {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        .banner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.postimg.cc/T17smn5M/B.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(3px);
+            z-index: 1;
+        }
+        .banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            font-family: 'Calibri', sans-serif;
+            padding: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+        }
 
-{% block title %}About Us - Starlight Hotel{% endblock %}
+        .banner-text {
+            position: relative;
+            z-index: 2;
+            color: white;
+            font-size: 1.5em;
+            font-family: 'Calibri', sans-serif;
+            text-align: center;
+            margin-top: 20px;
+        }
 
-{% block content %}
-    <h1>About Us</h1>
-    <p>Welcome to the Starlight Hotel Management System!</p>
-    <p>At Starlight Hotel, we pride ourselves on delivering exceptional service and creating unforgettable experiences for our guests. Our dedicated team of experts is committed to maintaining the highest standards of hospitality and ensuring your stay is as enjoyable as possible. Meet the key members of our team:</p>
+        .container {
+            padding: 20px;
+        }
 
-    <div class="team-member">
-        <h2>Optimus Prime - Owner</h2>
-        <p>As the visionary leader of Starlight Hotel, Optimus Prime ensures the highest standards of hospitality and guest satisfaction. His strategic guidance and commitment to excellence drive our mission to provide an unparalleled hotel experience.</p>
+        .section h2 {
+            font-size: 2.5em;
+            font-family: 'Calibri', sans-serif;
+        }
+
+        .section p {
+            font-size: 1.25em; /* Calibri 16 equivalent */
+            font-style: italic;
+            font-family: 'Calibri', sans-serif;
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+
+        .team-member img {
+            width: 3in; /* 3 inches */
+            height: 3in; /* 3 inches */
+            border-radius: 50%; /* Circular image */
+            margin-right: 20px;
+            object-fit: cover; /* Ensures the image covers the area */
+        }
+
+        .team-member h3 {
+            font-size: 2em; /* Calibri 20 equivalent */
+            font-weight: bold;
+            font-family: 'Calibri', sans-serif;
+        }
+
+        .team-member p {
+            font-size: 1.25em; /* Calibri 16 equivalent */
+            font-family: 'Calibri', sans-serif;
+        }
+
+        .italic {
+            font-size: 1.25em; /* Calibri 14 equivalent */
+            font-style: italic;
+            font-weight: bold;
+            font-family: 'Calibri', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{{ url_for('home') }}">Starlight Hotel</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('booking') }}">Room Booking</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'Manager' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('view_availability') }}">Check Room Availability</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('daily_reports') }}">Daily Reports</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('checkin_checkout') }}">Check-In/Check-Out</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('room_service') }}">Room Service</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('fees_rules') }}">Fees & Rules</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="banner">
+        <div class="banner-content">
+            <h1>About Us</h1>
+        </div>
     </div>
+    
+    <div class="container">
+        <div class="section">
+            <h2>Welcome to the Starlight Hotel Management System!</h2>
+            <p>At Starlight Hotel, we pride ourselves on delivering exceptional service and creating unforgettable experiences for our guests. Our dedicated team of experts is committed to maintaining the highest standards of hospitality and ensuring your stay is as enjoyable as possible. Meet the key members of our team:</p>
+            
+            <div class="team-member">
+                <img src="https://i.postimg.cc/ZqS7kc1H/OP.png" alt="Optimus Prime">
+                <div>
+                    <h3>Optimus Prime - Owner</h3>
+                    <p>As the visionary leader of Starlight Hotel, Optimus Prime ensures the highest standards of hospitality and guest satisfaction. His strategic guidance and commitment to excellence drive our mission to provide an unparalleled hotel experience.</p>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="https://i.postimg.cc/wMZ2wcXh/BB.png" alt="Bumblebee">
+                <div>
+                    <h3>Bumblebee - General Manager</h3>
+                    <p>Bumblebee oversees the daily operations of the hotel, ensuring that everything runs smoothly and guests have a seamless experience. His attention to detail and dedication to service excellence play a crucial role in our hotel's success.</p>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="https://i.postimg.cc/W39XkPtY/R.png" alt="Ratchet">
+                <div>
+                    <h3>Ratchet - Head of Maintenance</h3>
+                    <p>Ratchet is responsible for maintaining our state-of-the-art facilities and ensuring that everything operates flawlessly. His expertise in facility management guarantees that our guests enjoy a comfortable and trouble-free stay.</p>
+                </div>
+            </div>
+        </div>
 
-    <div class="team-member">
-        <h2>Bumblebee - General Manager</h2>
-        <p>Bumblebee oversees the daily operations of the hotel, ensuring that everything runs smoothly and guests have a seamless experience. His attention to detail and dedication to service excellence play a crucial role in our hotel's success.</p>
+        <div class="section">
+            <p class="italic">Thank you for choosing Starlight Hotel. We look forward to welcoming you and providing an unforgettable experience.</p>
+        </div>
     </div>
-
-    <div class="team-member">
-        <h2>Ratchet - Head of Maintenance</h2>
-        <p>Ratchet is responsible for maintaining our state-of-the-art facilities and ensuring that everything operates flawlessly. His expertise in facility management guarantees that our guests enjoy a comfortable and well-maintained environment.</p>
-    </div>
-
-    <div class="team-member">
-        <h2>Arcee - Head of Guest Relations</h2>
-        <p>Arcee is dedicated to ensuring that every guest has a memorable and enjoyable stay. Her focus on guest satisfaction and personalized service helps to create a welcoming and friendly atmosphere at Starlight Hotel.</p>
-    </div>
-
-    <p>Thank you for choosing Starlight Hotel. We look forward to providing you with an exceptional experience and are here to assist you with any needs or questions you might have during your stay.</p>
-{% endblock %}
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

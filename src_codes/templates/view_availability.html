@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}View Availability - Starlight Hotel{% endblock %}
+
+{% block content %}
+<h1>View Room Availability</h1>
+
+<form method="post" action="/view_availability">
+    <label for="start_date">Start Date:</label>
+    <input type="date" id="start_date" name="start_date" required>
+    <label for="end_date">End Date:</label>
+    <input type="date" id="end_date" name="end_date" required>
+    <input type="submit" value="Show Available Rooms">
+</form>
+
+{% if available_rooms %}
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+<table>
+    <thead>
+        <tr>
+            <th>Room Number</th>
+            <th>Room Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for room in available_rooms %}
+        <tr>
+            <td>{{ room.room_id }}</td>
+            <td>{{ room.room_type }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No rooms available for the specified period.</p>
+{% endif %}
+
+{% endblock %}

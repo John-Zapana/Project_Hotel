@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User - Starlight Hotel{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="page-title">Edit User</h1>
+        <form method="POST" class="edit-user-form">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" value="{{ user.username }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Leave blank to keep current password">
+            </div>
+            
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select id="role" name="role" class="form-control">
+                    <option value="Admin" {% if user.role == 'Admin' %}selected{% endif %}>Admin</option>
+                    <option value="Manager" {% if user.role == 'Manager' %}selected{% endif %}>Manager</option>
+                    <option value="Staff" {% if user.role == 'Staff' %}selected{% endif %}>Staff</option>
+                    <option value="Customer" {% if user.role == 'Customer' %}selected{% endif %}>Customer</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Update User</button>
+        </form>
+    </div>
+{% endblock %}

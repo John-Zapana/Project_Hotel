@@ -1,3 +1,4 @@
+# mongo_operations.py
 # cd Project_Hotel
 # cd src_codes
 # python3 mongo_operations.py
@@ -5,6 +6,8 @@
 from pymongo import MongoClient
 import uuid
 from datetime import datetime
+import time
+import random
 
 def create_mongo_connection():
     """Create a MongoDB connection."""
@@ -13,14 +16,17 @@ def create_mongo_connection():
     db = client['starlight_hotel_db']
     print("Successfully connected to MongoDB database")
     return db
-
+    
 def validate_date(date_str):
-    """Validate date format."""
+    """Validate date format YYYY-MM-DD."""
     try:
-        datetime.strptime(date_str, '%Y-%m-%d')
+        datetime.datetime.strptime(date_str, '%Y-%m-%d')
         return True
     except ValueError:
         return False
+
+def generate_booking_id():
+    return f"{int(time.time())}{random.randint(1000, 9999)}"
 
 def create_booking(db, user_id, room_id, check_in, check_out, status='Pending', room_type=None):
     """Create a new booking in MongoDB with validation."""
@@ -34,35 +40,23 @@ def create_booking(db, user_id, room_id, check_in, check_out, status='Pending', 
         print("Invalid date format. Use YYYY-MM-DD.")
         return
 
-    # Validate status
-    valid_statuses = ['Pending', 'Confirmed', 'Cancelled']
-    if status not in valid_statuses:
-        print("Invalid status. Must be one of ['Pending', 'Confirmed', 'Cancelled'].")
-        return
+    # Generate booking ID
+    booking_id = generate_booking_id()
 
-    if room_type is None:
-        print("Room type must be provided.")
-        return
-
-    booking_id = str(uuid.uuid4())  # Generate a unique booking ID
-    booking_document = {
-        "booking_id": booking_id,
-        "user_id": user_id,
-        "room_id": room_id,
-        "check_in": check_in,
-        "check_out": check_out,
-        "status": status,
-        "room_type": room_type  # Ensure room_type is always included
+    # Construct the booking document
+    booking = {
+        'booking_id': booking_id,
+        'user_id': user_id,
+        'room_id': int(room_id),  # Ensure room_id is stored as an integer
+        'check_in': check_in,
+        'check_out': check_out,
+        'status': status,
+        'room_type': room_type
     }
-    
-    try:
-        result = bookings_collection.insert_one(booking_document)
-        if result.acknowledged:
-            print(f"Booking {booking_id} created successfully with details: {booking_document}")
-        else:
-            print("Booking insertion was not acknowledged.")
-    except Exception as e:
-        print(f"Failed to create booking: {e}")
+
+    # Insert into MongoDB
+    bookings_collection.insert_one(booking)
+    print("Booking successfully created.")
 
 def get_bookings(db):
     """Get all bookings from MongoDB."""
@@ -86,10 +80,3 @@ def delete_booking(db, booking_id):
         print(f"No booking found with booking_id={booking_id} to delete.")
     else:
         print(f"Booking {booking_id} deleted successfully.")
-
-#if __name__ == "__main__":
-#    db = create_mongo_connection()
-    # Test CRUD operations with validation
-#    create_booking(db, None, "user2", "room102", "2024-07-29", "2024-07-31", "Pending", "suite")  # Valid booking
-#    bookings = get_bookings(db)
-#    print("Bookings in database:", bookings)

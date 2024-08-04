@@ -11,7 +11,7 @@ def create_connection():
     try:
         connection = mysql.connector.connect(
             host='127.0.0.1',        # Update with your MySQL host
-            user='user1',    # Update with your MySQL username
+            user='newuser',    # Update with your MySQL username
             password='password',  # Update with your MySQL password
             database='starlight_hotel_db'
         )

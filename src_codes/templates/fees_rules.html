@@ -1,32 +1,243 @@
-{% extends "base.html" %}
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fees and Rules | Starlight Hotel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Calibri', sans-serif;
+        }
+        header {
+            padding: 0;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .navbar-nav .nav-item {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        .navbar-nav .nav-link {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #007bff;
+        }
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .navbar-brand:hover {
+            color: #007bff;
+        }
+        .banner {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        .banner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.postimg.cc/T17smn5M/B.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(3px);
+            z-index: 1;
+        }
+        .banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            font-family: 'Calibri', sans-serif;
+            padding: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+        }
 
-{% block title %}Fees and Rules - Starlight Hotel{% endblock %}
+        .container {
+            padding: 20px;
+        }
 
-{% block content %}
-    <h1>Fees and Rules</h1>
+        .section h2 {
+            font-size: 2.5em;
+            font-family: 'Calibri', sans-serif;
+        }
 
-    <div class="section" id="fees">
-        <h2>Fees</h2>
-        <p>Our hotel offers various fee structures depending on the type of room and the duration of stay. Below are the details:</p>
-        <ul>
-            <li><strong>Standard Room:</strong> $100 per night</li>
-            <li><strong>Deluxe Room:</strong> $150 per night</li>
-            <li><strong>Suite:</strong> $250 per night</li>
-            <li><strong>Additional Person:</strong> $30 per night</li>
-        </ul>
-        <p>All fees are subject to tax and service charges. For more details on special rates and packages, please contact our reception.</p>
+        .section p {
+            font-size: 1.25em; /* Calibri 16 equivalent */
+            font-style: italic;
+            font-family: 'Calibri', sans-serif;
+        }
+
+        .room-details {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .room-type {
+            text-align: center;
+            margin: 20px 0;
+            width: 60%;
+        }
+
+        .room-image {
+            width: 5in;
+            height: 4in;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .additional-info, .rules {
+            margin-top: 20px;
+        }
+
+        .additional-info p, .rules ul {
+            font-size: 1.25em; /* Calibri 16 equivalent */
+            font-family: 'Calibri', sans-serif;
+        }
+
+        .italic {
+            font-size: 1.25em; /* Calibri 14 equivalent */
+            font-style: italic;
+            font-weight: bold;
+            font-family: 'Calibri', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{{ url_for('home') }}">Starlight Hotel</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('booking') }}">Room Booking</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'Manager' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('view_availability') }}">Check Room Availability</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('daily_reports') }}">Daily Reports</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('checkin_checkout') }}">Check-In/Check-Out</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('room_service') }}">Room Service</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('fees_rules') }}">Fees & Rules</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="banner">
+        <div class="banner-content">
+            <h1>Fees and Rules</h1>
+        </div>
     </div>
 
-    <div class="section" id="rules">
-        <h2>Rules</h2>
-        <p>To ensure a pleasant stay for all guests, please adhere to the following rules:</p>
-        <ul>
-            <li>Check-in time is 3:00 PM and check-out time is 12:00 PM.</li>
-            <li>Smoking is not allowed inside the rooms. Designated smoking areas are provided.</li>
-            <li>Pets are not allowed on the premises, with the exception of service animals.</li>
-            <li>Any damage to hotel property will be charged to the guest's account.</li>
-            <li>Quiet hours are observed from 10:00 PM to 7:00 AM. Please be considerate of other guests.</li>
-        </ul>
-        <p>We appreciate your cooperation and hope you enjoy your stay with us!</p>
+    <div class="container">
+        <div class="section">
+            <p>Our hotel offers 3 types of luxurious rooms that you can choose according to your desired type of stay. Room fees are mentioned for your reference.</p>
+        </div>
+        <div class="room-details">
+            <div class="room-type">
+                <img src="https://i.postimg.cc/nrXrHq6S/s3.png" alt="Suite" class="room-image">
+                <h3>Suite</h3>
+                <p>Room charge per night: $250</p>
+            </div>
+            <div class="room-type">
+                <img src="https://i.postimg.cc/YC69qrs7/s9.png" alt="Deluxe Room" class="room-image">
+                <h3>Deluxe Room</h3>
+                <p>Room charge per night: $150</p>
+            </div>
+            <div class="room-type">
+                <img src="https://i.postimg.cc/C52ZDcGV/s10.png" alt="Standard Room" class="room-image">
+                <h3>Standard Room</h3>
+                <p>Room charge per night: $100</p>
+            </div>
+        </div>
+        <div class="additional-info mt-4">
+            <p><strong>*Additional Person:</strong> $30 per night</p>
+            <p><strong>*All fees are subject to tax and service charges. For more details on special rates and packages, please contact our reception.</strong></p>
+        </div>
+        <div class="rules mt-4">
+            <h2>Rules</h2>
+            <ul>
+                <li>Check-in time is 3:00 PM and check-out time is 12:00 PM.</li>
+                <li>Smoking is not allowed inside the rooms. Designated smoking areas are provided.</li>
+                <li>Pets are not allowed on the premises, with the exception of service animals.</li>
+                <li>Cancellation policy: Please refer to the booking confirmation for details.</li>
+            </ul>
+        </div>
+        <p class="italic mt-4">Thank you for choosing Starlight Hotel. We strive to make your stay comfortable and memorable.</p>
     </div>
-{% endblock %}
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://

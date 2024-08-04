@@ -4,29 +4,121 @@
 
 {% block content %}
     <h2>Request Room Service</h2>
-    <p>Use the form below to request room service. Our team will address your request promptly.</p>
-    
-    <form method="post" action="/room_service">
-        <div class="form-group">
-            <label for="room_number">Room Number:</label>
-            <input type="text" id="room_number" name="room_number" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="service_type">Type of Service:</label>
-            <select id="service_type" name="service_type" required>
-                <option value="food">Food</option>
-                <option value="beverage">Beverage</option>
-                <option value="cleaning">Cleaning</option>
-                <option value="other">Other</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
-        </div>
-        
-        <input type="submit" value="Request Service">
-    </form>
+    {% if current_user.role == 'Customer' %}
+        {% if not active_bookings and not booking %}
+            <p>Enter your User ID to retrieve your active bookings:</p>
+            <form method="post" action="/room_service">
+                <div class="form-group">
+                    <label for="user_id">User ID:</label>
+                    <input type="text" id="user_id" name="user_id" required>
+                </div>
+                <input type="submit" value="Retrieve Bookings">
+            </form>
+        {% elif active_bookings %}
+            <p>Select a booking to request service for:</p>
+            <table style="border-collapse: collapse; width: 100%; border: 1px solid black;">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Room ID</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in active_bookings %}
+                        <tr>
+                            <td>{{ booking.booking_id }}</td>
+                            <td>{{ booking.room_id }}</td>
+                            <td>{{ booking.check_in }}</td>
+                            <td>{{ booking.check_out }}</td>
+                            <td>
+                                <form method="post" action="/room_service">
+                                    <input type="hidden" name="booking_id" value="{{ booking._id }}">
+                                    <input type="hidden" name="room_id" value="{{ booking.room_id }}">
+                                    <input type="submit" value="Select Booking">
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% elif booking %}
+            <p>Request room service for booking ID {{ booking.booking_id }}:</p>
+            <form method="post" action="/room_service">
+                <input type="hidden" name="booking_id" value="{{ booking._id }}">
+                <input type="hidden" name="room_id" value="{{ booking.room_id }}">
+                <div class="form-group">
+                    <label for="service_type">Type of Service:</label>
+                    <select id="service_type" name="service_type" required>
+                        <option value="food">Food</option>
+                        <option value="beverage">Beverage</option>
+                        <option value="cleaning">Cleaning</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" required>
+                </div>
+                <div class="form-group">
+                    <label for="service_date">Date for Service:</label>
+                    <input type="date" id="service_date" name="service_date" required>
+                </div>
+                <input type="submit" value="Request Service">
+            </form>
+        {% endif %}
+    {% elif current_user.role == 'Staff' %}
+        <h2>Manage Room Service Requests</h2>
+        <p>Below is a list of pending and in-progress room service requests. Update the status as needed.</p>
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-top: 20px;
+            }
+            th, td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+        </style>
+        <table>
+            <thead>
+                <tr>
+                    <th>Room Number</th>
+                    <th>Type of Service</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in pending_services %}
+                    <tr>
+                        <td>{{ service.room_number }}</td>
+                        <td>{{ service.service_type }}</td>
+                        <td>{{ service.description }}</td>
+                        <td>{{ service.status }}</td>
+                        <td>
+                            <form method="post" action="/room_service">
+                                <input type="hidden" name="service_id" value="{{ service._id }}">
+                                <select name="new_status" required>
+                                    <option value="Pending" {% if service.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                    <option value="In-Progress" {% if service.status == 'In-Progress' %}selected{% endif %}>In-Progress</option>
+                                    <option value="Delivered" {% if service.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                    <option value="Cancelled" {% if service.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                </select>
+                                <input type="submit" value="Update Status">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}

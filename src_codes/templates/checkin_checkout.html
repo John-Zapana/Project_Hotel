@@ -3,26 +3,116 @@
 {% block title %}Check-In/Check-Out - Starlight Hotel{% endblock %}
 
 {% block content %}
-    <h1>Check-In/Check-Out</h1>
-    <form method="post" action="/checkin_checkout">
-        <div class="form-group">
-            <label for="user_id">User ID:</label>
-            <input type="text" id="user_id" name="user_id" required>
-        </div>
+<h1>Check-In/Check-Out</h1>
 
-        <div class="form-group">
-            <label for="room_id">Room ID:</label>
-            <input type="text" id="room_id" name="room_id" required>
-        </div>
+{% if current_user.role == 'Manager' %}
+<h2>Available Rooms for Specific Period</h2>
+<form method="post" action="/checkin_checkout">
+    <label for="start_date">Start Date:</label>
+    <input type="date" id="start_date" name="start_date" required>
+    <label for="end_date">End Date:</label>
+    <input type="date" id="end_date" name="end_date" required>
+    <input type="submit" value="Show Available Rooms">
+</form>
 
-        <div class="form-group">
-            <label for="action">Action:</label>
-            <select id="action" name="action" required>
-                <option value="check_in">Check-In</option>
-                <option value="check_out">Check-Out</option>
-            </select>
-        </div>
+<!-- Display available rooms if available -->
+{% if available_rooms %}
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+<table>
+    <thead>
+        <tr>
+            <th>Room Number</th>
+            <th>Room Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for room in available_rooms %}
+        <tr>
+            <td>{{ room.room_id }}</td>
+            <td>{{ room.room_type }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No rooms available for the specified period.</p>
+{% endif %}
+{% endif %}
 
-        <input type="submit" value="Submit">
-    </form>
+{% if current_user.role == 'Staff' %}
+<h2>Approved Rooms</h2>
+<form method="post" action="/checkin_checkout">
+    <input type="hidden" name="request_approved_rooms" value="true">
+    <input type="submit" value="Show Approved Rooms">
+</form>
+
+{% if rooms %}
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 20px;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+<table>
+    <thead>
+        <tr>
+            <th>Room Number</th>
+            <th>Check-In Date</th>
+            <th>Check-Out Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for room in rooms %}
+        <tr>
+            <td>{{ room.room_id }}</td>
+            <td>{{ room.check_in }}</td>
+            <td>{{ room.check_out }}</td>
+            <td>{{ room.status }}</td>
+            <td>
+                <form method="post" action="/checkin_checkout">
+                    <input type="hidden" name="booking_id" value="{{ room._id }}">
+                    <div class="form-group">
+                        <label for="action">Action:</label>
+                        <select id="action" name="action" required>
+                            <option value="check-in">Check-In</option>
+                            <option value="check-out">Check-Out</option>
+                        </select>
+                    </div>
+                    <input type="submit" value="Submit">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No approved rooms available.</p>
+{% endif %}
+{% endif %}
+
 {% endblock %}

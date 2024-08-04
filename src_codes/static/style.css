@@ -5,10 +5,6 @@ body {
     padding: 0;
     background-color: #e9ecef; /* Light gray background */
     box-sizing: border-box; /* Ensure padding is included in the element’s total width and height */
-}
-
-/* Ensure the body has padding to keep content away from the edges */
-body {
     padding: 0 40px; /* Increase padding to 40px on the left and right */
 }
 
@@ -19,9 +15,10 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px; /* Add padding inside the containers */
     margin: 20px auto;
-    max-width: 800px; /* Limit the maximum width of the containers */
+    max-width: 1200px; /* Increased the maximum width of the containers */
 }
 
+/* Header Styling */
 header {
     background-color: #333;
     color: #fff;
@@ -33,60 +30,60 @@ header {
     box-sizing: border-box; /* Include padding in the width calculation */
 }
 
+/* Styling for the top-bar */
 .top-bar {
     display: flex;
-    flex-direction: column; /* Stack auth-buttons and nav-tabs vertically */
+    justify-content: space-between; /* Space out auth-buttons and nav-tabs */
     align-items: center;
-    width: 100%;
+    padding: 0 20px; /* Padding to keep elements away from edges */
 }
 
+/* Auth buttons styling */
 .auth-buttons {
-    margin-bottom: 30px; /* Space between buttons and tabs */
-    align-self: flex-end; /* Align buttons to the right */
-    padding: 0 20px; /* Padding to prevent buttons from hitting the edges */
-    box-sizing: border-box;
+    margin: 0;
 }
 
-/* Ensure buttons are smaller and adjust spacing */
-.auth-buttons .btn {
+.auth-buttons a {
     color: #fff;
-    background-color: #007bff;
     text-decoration: none;
-    padding: 8px 12px; /* Reduced padding */
+    padding: 8px 12px;
     border-radius: 5px;
+    font-size: 14px;
     margin: 0 5px;
-    font-size: 14px; /* Adjust font size if needed */
+    background-color: #007bff;
+    transition: background-color 0.3s ease;
 }
 
-.auth-buttons .btn:hover {
+.auth-buttons a:hover {
     background-color: #0056b3;
 }
 
-nav {
-    width: 100%;
+/* Navbar styling */
+.navbar {
+    background-color: #333;
 }
 
-.nav-tabs {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center; /* Center the tabs */
-}
-
-.nav-tabs li {
-    margin: 0 10px;
-}
-
-.nav-tabs li a {
+.navbar-brand {
     color: #fff;
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 4px;
+    font-size: 1.8em;
+    font-weight: bold;
 }
 
-.nav-tabs li a:hover {
-    background-color: #555; /* Slightly lighter background on hover */
+.navbar-nav .nav-item {
+    margin: 0;
+}
+
+.navbar-nav .nav-link {
+    color: #fff;
+    font-size: 1.2em;
+    padding: 15px 20px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.navbar-nav .nav-link:hover {
+    background-color: #575757;
+    border-radius: 5px;
 }
 
 /* Form Styles */
@@ -165,4 +162,173 @@ input[type="submit"]:hover {
 
 .room input[type="radio"]:disabled + label {
     color: #6c757d; /* Gray text for unavailable rooms */
+}
+
+/* Tabs Styling */
+.nav-tabs {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #007bff;
+}
+
+.nav-item {
+    flex: 1;
+}
+
+.nav-link {
+    text-align: center;
+    border-radius: 0;
+    font-size: 1em;
+    padding: 10px 15px;
+}
+
+.nav-link.active {
+    background-color: #007bff; /* Change to your desired active background color */
+    color: white;
+}
+
+/* Banner Styling */
+.banner {
+    width: 100%;
+    height: 300px; /* Set a specific height */
+    background-size: cover; /* Ensure the image covers the banner area */
+    background-position: center; /* Center the image */
+    position: relative;
+    margin-bottom: 20px; /* Add margin for spacing */
+}
+
+.banner-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+}
+
+.banner-content h1 {
+    font-size: 3em;
+    margin: 0;
+}
+
+.banner-content p {
+    font-size: 1.5em;
+    margin: 20px 0 0;
+}
+
+/* Fees and Rules Page Styles */
+.fees-rules-banner {
+    background-image: url('https://www.access.sb/app/uploads/2023/10/7ece0c8e-fce3-4fc5-aa64-ef22a24db3f2.jpg.jpg');
+}
+
+.room-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Adjust the gap between items */
+}
+
+.room-type {
+    flex: 1 1 calc(33.333% - 20px); /* Ensures 3 items in a row with a gap */
+    text-align: center;
+}
+
+.room-image {
+    width: 100%;
+    height: 200px; /* Ensure images are the same height */
+    object-fit: cover; /* Crop images to fit */
+    border-radius: 8px;
+}
+
+.room-details h3 {
+    margin-top: 10px;
+}
+
+.room-details p {
+    font-size: 1.2em;
+    color: #007bff;
+}
+
+.additional-info p {
+    font-size: 1em;
+    color: black; /* Black text color */
+    font-style: italic; /* Italic text */
+}
+
+.additional-info p::before {
+    content: "* "; /* Add asterisk before each paragraph */
+}
+
+.rules {
+    margin-top: 20px;
+}
+
+.rules h2 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+
+.rules ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    font-size: 0.9em;
+}
+
+.rules li {
+    margin-bottom: 10px; /* Adds space between list items */
+}
+
+.italic {
+    font-style: italic;
+}
+
+/* Team Member Styling */
+.team-member {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    border-bottom: 1px solid #ddd; /* Optional: adds a bottom border for separation */
+    padding-bottom: 20px; /* Optional: adds space below each team member section */
+}
+
+.team-member img {
+    width: 150px; /* Adjust the width as needed */
+    height: 150px; /* Adjust the height as needed */
+    border-radius: 50%; /* Makes the image circular */
+    margin-right: 20px; /* Space between image and text */
+    object-fit: cover; /* Ensures the image covers the assigned area */
+}
+
+.team-member div {
+    flex: 1; /* Allows text to take up the remaining space */
+}
+
+/* Buttons for booking approval */
+.btn-approve {
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block; /* Ensure buttons are inline */
+    margin-right: 10px; /* Space between buttons */
+}
+
+.btn-approve:hover {
+    background-color: #218838;
+}
+
+.btn-reject {
+    background-color: #dc3545; /* Red */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block; /* Ensure buttons are inline */
+    margin-right: 10px; /* Space between buttons */
+}
+
+.btn-reject:hover {
+    background-color: #c82333;
 }

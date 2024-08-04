@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Starlight Hotel{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+        <div class="card-container">
+            <div class="card">
+                <h2>Manage Users</h2>
+                <p>View and manage all user accounts.</p>
+                <a href="{{ url_for('manage_users') }}" class="btn">Go to Manage Users</a>
+            </div>
+            <div class="card">
+                <h2>Financial Reports</h2>
+                <p>Generate and view financial reports.</p>
+                <a href="{{ url_for('financial_reports') }}" class="btn">View Reports</a>
+            </div>
+            <div class="card">
+                <h2>View Bookings</h2>
+                <p>Review all current and past bookings.</p>
+                <a href="{{ url_for('view_bookings') }}" class="btn">View Bookings</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

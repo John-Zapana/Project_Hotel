@@ -3,7 +3,7 @@
 {% block title %}Manage Bookings - Starlight Hotel{% endblock %}
 
 {% block content %}
-    <h1>{% if is_manager %}Manage Bookings{% else %}Room Booking{% endif %}</h1>
+    <h1>Manage Bookings</h1>
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -16,7 +16,6 @@
     {% endwith %}
 
     {% if is_manager %}
-        <!-- Manager's booking management view -->
         <ul class="nav nav-tabs" id="bookingTabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="pending-tab" data-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="true">Pending</a>
@@ -36,6 +35,7 @@
                     <table class="table">
                         <thead>
                             <tr>
+                            
                                 <th>Room ID</th>
                                 <th>Check-In Date</th>
                                 <th>Check-Out Date</th>
@@ -46,17 +46,18 @@
                         <tbody>
                             {% for booking in pending_bookings %}
                                 <tr>
+                                    
                                     <td>{{ booking.room_id }}</td>
                                     <td>{{ booking.check_in }}</td>
                                     <td>{{ booking.check_out }}</td>
                                     <td>{{ booking.status }}</td>
                                     <td class="booking-actions">
-                                        <form method="post" action="{{ url_for('booking') }}" style="display:inline;">
+                                        <form method="post" action="{{ url_for('manage_bookings') }}" style="display:inline;">
                                             <input type="hidden" name="booking_id" value="{{ booking.booking_id }}">
                                             <input type="hidden" name="action" value="approve">
                                             <button type="submit" class="btn btn-approve btn-sm">Approve</button>
                                         </form>
-                                        <form method="post" action="{{ url_for('booking') }}" style="display:inline;">
+                                        <form method="post" action="{{ url_for('manage_bookings') }}" style="display:inline;">
                                             <input type="hidden" name="booking_id" value="{{ booking.booking_id }}">
                                             <input type="hidden" name="action" value="reject">
                                             <button type="submit" class="btn btn-reject btn-sm">Reject</button>
@@ -76,6 +77,7 @@
                     <table class="table">
                         <thead>
                             <tr>
+                               
                                 <th>Room ID</th>
                                 <th>Check-In Date</th>
                                 <th>Check-Out Date</th>
@@ -85,6 +87,7 @@
                         <tbody>
                             {% for booking in approved_bookings %}
                                 <tr>
+                                    
                                     <td>{{ booking.room_id }}</td>
                                     <td>{{ booking.check_in }}</td>
                                     <td>{{ booking.check_out }}</td>
@@ -103,6 +106,7 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                
                                 <th>Room ID</th>
                                 <th>Check-In Date</th>
                                 <th>Check-Out Date</th>
@@ -112,6 +116,7 @@
                         <tbody>
                             {% for booking in rejected_bookings %}
                                 <tr>
+                                    
                                     <td>{{ booking.room_id }}</td>
                                     <td>{{ booking.check_in }}</td>
                                     <td>{{ booking.check_out }}</td>
@@ -126,27 +131,28 @@
             </div>
         </div>
 
-    {% elif current_user.role == 'Customer' %}
-        <!-- Customer's booking form -->
-        <form id="bookingForm" method="post" action="{{ url_for('booking') }}">
+    {% else %}
+        <!-- Customer form -->
+        <form id="bookingForm" method="post" action="{{ url_for('bookingManager') }}">
             <div class="form-group">
                 <label for="room_type">Room Type:</label>
-                <select id="room_type" name="room_type" required>
+                <select id="room_type" name="room_type" class="form-control" required>
                     <option value="">Select Room Type</option>
                     <option value="single" {% if room_type == 'single' %}selected{% endif %}>Single</option>
                     <option value="double" {% if room_type == 'double' %}selected{% endif %}>Double</option>
                     <option value="suite" {% if room_type == 'suite' %}selected{% endif %}>Suite</option>
+                    <!-- Add more room types as needed -->
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="check_in">Check-In Date:</label>
-                <input type="date" id="check_in" name="check_in" value="{{ check_in_date }}" required>
+                <input type="date" id="check_in" name="check_in" value="{{ check_in_date }}" class="form-control" required>
             </div>
 
             <div class="form-group">
                 <label for="check_out">Check-Out Date:</label>
-                <input type="date" id="check_out" name="check_out" value="{{ check_out_date }}" required>
+                <input type="date" id="check_out" name="check_out" value="{{ check_out_date }}" class="form-control" required>
             </div>
 
             <input type="submit" value="Check Availability" class="btn btn-primary">
@@ -155,47 +161,25 @@
         <!-- Display available rooms here -->
         {% if available_rooms %}
             <h2>Available Rooms</h2>
-            <form method="post" action="{{ url_for('booking') }}">
+            <form method="post" action="{{ url_for('select_room') }}">
                 <input type="hidden" name="check_in_date" value="{{ check_in_date }}">
                 <input type="hidden" name="check_out_date" value="{{ check_out_date }}">
                 <input type="hidden" name="room_type" value="{{ room_type }}">
-                <div class="room-list">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Room Type</th>
-                                <th>Room ID</th>
-                                <th>Price</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for room in available_rooms %}
-                            <tr>
-                                <td>{{ room.type_room }}</td>
-                                <td>{{ room.room_id }}</td>
-                                <td>${{ room.price }}</td>
-                                <td>
-                                    <button type="submit" name="room_id" value="{{ room.room_id }}">Book</button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="room-map">
+                    <div class="room-map-container">
+                        {% for room in available_rooms %}
+                            <div class="room available">
+                                <p>Room {{ room }}</p>
+                                <input type="radio" id="room_{{ room }}" name="room_id" value="{{ room }}" required>
+                                <label for="room_{{ room }}">Select</label>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
+                <input type="submit" value="Confirm Selection" class="btn btn-success">
             </form>
         {% else %}
             <p>No rooms available for the selected criteria.</p>
         {% endif %}
-    {% else %}
-        <p>You do not have permission to access this page. Please log in with appropriate credentials.</p>
     {% endif %}
-{% endblock %}
-
-{% block scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // JavaScript code for interactivity
-    });
-</script>
 {% endblock %}

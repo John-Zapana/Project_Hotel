@@ -48,6 +48,21 @@ def delete_user(user_id):
     connection.close()
     print("User deleted successfully")
 
+def get_user_by_id(user_id):
+    """Retrieve a single user from the Users table by user_id."""
+    connection = create_connection()
+    cursor = connection.cursor(dictionary=True)
+    query = "SELECT * FROM Users WHERE user_id = %s"
+    cursor.execute(query, (user_id,))
+    user = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return user
+    
+
+    
+    
+
 # Example usage (for testing)
 if __name__ == "__main__":
     # Test the functions

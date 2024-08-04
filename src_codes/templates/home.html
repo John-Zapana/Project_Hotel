@@ -1,9 +1,205 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Starlight Hotel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Calibri', sans-serif;
+        }
+        header{
+            padding:0;
+        }
+        .navbar {
+            margin-bottom: 20px;
+        }
+        .navbar-nav .nav-item {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        .navbar-nav .nav-link {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #007bff;
+        }
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .navbar-brand:hover {
+            color: #007bff;
+        }
+        .banner {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        .banner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.postimg.cc/T17smn5M/B.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(3px);
+            z-index: 1;
+        }
+        .banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            font-size: 4em;
+            padding: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+        }
 
-{% block title %}Home - Starlight Hotel{% endblock %}
+        .banner-text {
+            position: relative;
+            z-index: 2;
+            color: white;
+            font-size: 1.5em;
+            text-align: center;
+            margin-top: 20px;
+        }
 
-{% block content %}
-    <h2>Welcome to Starlight Hotel!</h2>
-    <p>Use the menu above to navigate through our management system and access various services.</p>
-    <p>We aim to provide a seamless experience for managing hotel operations and guest services.</p>
-{% endblock %}
+        .container {
+            padding: 20px;
+        }
+        .section {
+            text-align: center;
+            margin: 40px auto;
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            max-width: 800px;
+        }
+        .section img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            margin: 20px 0;
+        }
+        .section h2 {
+            font-size: 2.5em;
+            margin: 20px 0;
+            color: #333;
+            font-weight: bold;
+        }
+        .section p {
+            font-size: 1.2em;
+            margin: 20px 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{{ url_for('home') }}">Starlight Hotel</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('booking') }}">Room Booking</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'Manager' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('check_availability') }}">Check Room Availability</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('financial_reports') }}">Daily Reports</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('checkin_checkout') }}">Check-In/Check-Out</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('room_service') }}">Room Service</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('fees_rules') }}">Fees & Rules</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="banner">
+        <div class="banner-content">
+            Welcome to Starlight Hotel
+        </div>
+    </div>
+    <div class="container">
+        <div class="section">
+            <img src="https://i.postimg.cc/fWrMndk0/1.png" alt="Hotel Image">
+            <h2>Welcome to the Starlight Hotel, where the world of Transformers comes to life!</h2>
+            
+            <h3>Experience the thrill and adventure of your favorite Autobots and Decepticons in a hotel designed for fans of all ages. Your ultimate Transformers-themed getaway awaits!</h3>
+            <p>Starlight Hotel, a luxurious and innovative hospitality establishment known for its impeccable service and state-of-the-art facilities, is all you have been looking for.</p>
+            <p>We aim to provide a seamless experience for managing hotel operations and guest services.</p>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+

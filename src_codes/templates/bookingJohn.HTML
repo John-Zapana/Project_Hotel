@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Room Booking - Starlight Hotel{% endblock %}
+
+{% block content %}
+    <h1>Room Booking</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if current_user.role != 'Admin' %}
+    <form id="bookingForm" method="post" action="{{ url_for('booking') }}">
+        <div class="form-group">
+            <label for="room_type">Room Type:</label>
+            <select id="room_type" name="room_type" required>
+                <option value="">Select Room Type</option>
+                <option value="single" {% if room_type == 'single' %}selected{% endif %}>Single</option>
+                <option value="double" {% if room_type == 'double' %}selected{% endif %}>Double</option>
+                <option value="suite" {% if room_type == 'suite' %}selected{% endif %}>Suite</option>
+                <!-- Add more room types as needed -->
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="check_in">Check-In Date:</label>
+            <input type="date" id="check_in" name="check_in" value="{{ check_in_date }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="check_out">Check-Out Date:</label>
+            <input type="date" id="check_out" name="check_out" value="{{ check_out_date }}" required>
+        </div>
+
+        {% if current_user.role != 'Customer' %}
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select id="status" name="status">
+                <option value="confirmed" {% if status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="cancelled" {% if status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+        </div>
+        {% endif %}
+
+        <input type="submit" value="Check Availability">
+    </form>
+
+    <!-- Display available rooms here -->
+    {% if available_rooms is not none %}
+        <h2>Available Rooms</h2>
+        <form method="post" action="{{ url_for('select_room') }}">
+            <input type="hidden" name="check_in_date" value="{{ check_in_date }}">
+            <input type="hidden" name="check_out_date" value="{{ check_out_date }}">
+            <input type="hidden" name="room_type" value="{{ room_type }}">
+            {% if current_user.role != 'Customer' %}
+            <input type="hidden" name="status" value="{{ status }}">
+            {% endif %}
+            <div class="room-map">
+                <div class="room-map-container">
+                    {% if available_rooms %}
+                        {% for room in available_rooms %}
+                            <div class="room available">
+                                <p>Room {{ room }}</p>
+                                <input type="radio" id="room_{{ room }}" name="room_id" value="{{ room }}" required>
+                                <label for="room_{{ room }}">Select</label>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No rooms available for the selected criteria.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <input type="submit" value="Confirm Selection">
+        </form>
+    {% endif %}
+
+    {% else %}
+    <p>Admins cannot create bookings. Please navigate to the appropriate section.</p>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // JavaScript code for interactivity (e.g., filtering, highlighting rooms)
+        const roomElements = document.querySelectorAll('.room');
+        roomElements.forEach(room => {
+            room.addEventListener('mouseover', () => {
+                room.style.backgroundColor = '#f0f0f0'; // Highlight on hover
+            });
+            room.addEventListener('mouseout', () => {
+                room.style.backgroundColor = ''; // Remove highlight
+            });
+        });
+
+        // Client-side form validation
+        document.getElementById('bookingForm').addEventListener('submit', function(event) {
+            const roomType = document.getElementById('room_type').value;
+            const checkIn = document.getElementById('check_in').value;
+            const checkOut = document.getElementById('check_out').value;
+
+            if (!roomType || !checkIn || !checkOut) {
+                event.preventDefault();
+                alert('Please fill out all required fields.');
+            }
+        });
+    });
+</script>
+{% endblock %}

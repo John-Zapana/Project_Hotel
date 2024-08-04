@@ -1,8 +1,52 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Reports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Financial Reports</h1>
+        
+        <h2>Monthly Revenue</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Revenue</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in monthly_revenue %}
+                <tr>
+                    <td>{{ report._id }}</td>
+                    <td>{{ report.monthly_revenue | format_currency }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-{% block title %}Financial Reports - Starlight Hotel{% endblock %}
-
-{% block content %}
-    <h1>Financial Reports</h1>
-    <!-- Implement financial reports content -->
-{% endblock %}
+        <h2>Quarterly Revenue</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Quarter</th>
+                    <th>Revenue</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in quarterly_revenue %}
+                <tr>
+                    <td>{{ report._id.year }}</td>
+                    <td>{{ report._id.quarter }}</td>
+                    <td>{{ report.quarterly_revenue | format_currency }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
